@@ -1,12 +1,12 @@
-# name: Deploy to Dagster Cloud Serverless
+name: Deploy to Dagster Cloud Serverless
  
-# on:
-#   push:
-#     branches:
-#       - main
-#   pull_request:
-#     branches:
-#       - main
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
  
 # jobs:
 #   deploy:
