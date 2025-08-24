@@ -26,10 +26,13 @@ jobs:
       run: |
         pip install dagster-cloud[docker]
         
-    - name: Update dagster_cloud.yaml configuration
+    - name: Remove conflicting config and create workspace.yaml
       run: |
-        # Update your existing dagster_cloud.yaml to fix the format
-        cat > dagster_cloud.yaml << EOF
+        # Remove existing dagster_cloud.yaml if it exists
+        rm -f dagster_cloud.yaml
+        
+        # Create fresh workspace.yaml
+        cat > workspace.yaml << EOF
         locations:
           - location_name: dagster-cloud
             image: ghcr.io/csw191/dagster-cloud:latest
@@ -37,8 +40,8 @@ jobs:
               package_name: dagster_cloud
         EOF
         
-        echo "Updated dagster_cloud.yaml:"
-        cat dagster_cloud.yaml
+        echo "Created workspace.yaml:"
+        cat workspace.yaml
         
     - name: Deploy to Dagster Cloud
       env:
@@ -52,5 +55,9 @@ jobs:
         echo "Using deployment: $DEPLOYMENT_NAME"
         echo "API Token length: ${#DAGSTER_CLOUD_API_TOKEN}"
         
-        # Use explicit organization and deployment parameters
-        dagster-cloud workspace sync --organization "$ORGANIZATION_NAME" --deployment "$DEPLOYMENT_NAME"
+        # Check which config files exist
+        echo "Available config files:"
+        ls -la *.yaml *.yml 2>/dev/null || echo "No YAML files found"
+        
+        # Use explicit workspace file parameter with dagster_cloud.yaml
+        dagster-cloud workspace sync --organization "$ORGANIZATION_NAME" --deployment "$DEPLOYMENT_NAME" --workspace dagster_cloud.yaml
