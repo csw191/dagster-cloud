@@ -4,7 +4,3 @@ locations:
     code_source:
       package_name: dagster_cloud
     working_directory: /app
-    container_context:
-      k8s:
-        env_secrets:
-          - snowflake-secrets
