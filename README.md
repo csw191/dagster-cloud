@@ -14,4 +14,3 @@ A Dagster project for data orchestration with dbt and Snowflake.
 - dbt-snowflake for data transformation
 - Pydantic for data validation
 - Python-dotenv for .env variables
-- Dagster Cloud
