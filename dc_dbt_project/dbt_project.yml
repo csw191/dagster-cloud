@@ -1,0 +1,71 @@
+name: 'dagster_cloud'
+version: '1.0.0'
+config-version: 2
+
+profile: 'shared_snowflake_profile'
+
+vars:
+  # Database and Schema Configuration
+  database_name: 'HHS_FIVETRAN_RAW_DB' #HHS_WRKSPC_DB #'HHS_FIVETRAN_RAW_DB'
+  raw_schema: 'FIVETRAN_RAW' #'CSX200_CSX200'
+  staging_schema: 'STAGING' #'CSX200_CSX200' 
+  intermediate_schema: 'INTEGRATION' #'CSX200_CSX200'
+  marts_schema: 'PRESENTATION' #'CSX200_CSX200'
+
+  # Data source configuration - SIMPLIFIED
+  data_sources:
+    snap:
+      table_name: 'SNAP'
+      columns: ['family_id', 'household_size', 'monthly_income', 'benefit_amount', 'enrollment_status']
+      filter_column: 'enrollment_status'
+      filter_values: ['active', 'pending']
+      income_column: 'monthly_income'
+      size_column: 'household_size'
+      amount_column: 'benefit_amount'
+      status_column: 'enrollment_status'
+    wic:
+      table_name: 'WIC'
+      columns: ['family_id', 'number_of_children', 'income_level', 'voucher_value', 'program_status']
+      filter_column: 'program_status'
+      filter_values: ['active', 'certified']
+      income_column: 'income_level'
+      size_column: 'number_of_children'
+      amount_column: 'voucher_value'
+      status_column: 'program_status'
+
+
+  
+  # Business logic thresholds
+  income_thresholds:
+    low: 1500
+    moderate: 3000
+  
+  utilization_thresholds:
+    high: 90
+    moderate: 70
+  
+  benefit_thresholds:
+    high_ratio: 0.3
+    moderate_ratio: 0.15
+
+# Model Configuration
+models:
+  ecids_test:
+    staging:
+      +materialized: view
+      +schema: STAGING
+      # +schema: "{{ var('staging_schema') }}"
+    intermediate:
+      +materialized: view
+      +schema: INTEGRATION
+      # +schema: "{{ var('intermediate_schema') }}"
+    marts:
+      +materialized: table
+      +schema: PRESENTATION
+      # +schema: "{{ var('marts_schema') }}"
+      +cluster_by: ['program_type']
+
+# Clean targets
+clean-targets:
+  - "target"
+  - "dbt_packages"

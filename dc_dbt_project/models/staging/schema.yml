@@ -1,0 +1,113 @@
+
+# -- ================================================================
+# -- FILE: models/staging/schema.yml
+# -- LOCATION: ~/child_assistance_analytics/models/staging/schema.yml
+# -- ================================================================
+version: 2
+sources:
+  - name: hhs_raw_data
+    # database: "{{ var('database_name') }}"
+    # schema: "{{ var('raw_schema') }}"
+    database: HHS_WRKSPC_DB
+    schema: FIVETRAN_RAW
+    description: "Raw data from Fivetran for child assistance programs"
+    tables:
+      - name: SNAP
+        description: "Raw SNAP assistance data from HHS systems"
+        columns:
+          - name: family_id
+            tests:
+              - unique
+              - not_null
+          - name: household_size
+          - name: monthly_income
+          - name: benefit_amount
+          - name: enrollment_status
+          - name: _fivetran_synced
+          - name: _fivetran_deleted
+      
+      - name: WIC
+        description: "Raw WIC assistance data from HHS systems"
+        columns:
+          - name: family_id
+            tests:
+              - unique
+              - not_null
+          - name: number_of_children
+          - name: income_level
+          - name: voucher_value
+          - name: program_status
+          - name: _fivetran_synced
+          - name: _fivetran_deleted
+models:
+  - name: stg_snap
+    description: "Staging table for SNAP (Supplemental Nutrition Assistance Program) data"
+    columns:
+      - name: family_id
+        description: "Unique family identifier"
+        tests:
+          - unique
+          - not_null
+      - name: household_size
+        description: "Number of people in household"
+        tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              min_value: 1
+              max_value: 20
+      - name: monthly_income
+        description: "Monthly household income in dollars"
+        tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              min_value: 0
+              max_value: 10000
+      - name: benefit_amount
+        description: "Monthly SNAP benefit amount in dollars"
+        tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              min_value: 0
+              max_value: 2000
+      - name: enrollment_status
+        description: "Current enrollment status"
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['active', 'pending', 'inactive']
+  
+  - name: stg_wic
+    description: "Staging table for WIC (Women, Infants, and Children) data"
+    columns:
+      - name: family_id
+        description: "Unique family identifier"
+        tests:
+          - unique
+          - not_null
+      - name: number_of_children
+        description: "Number of children in family"
+        tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              min_value: 0
+              max_value: 50
+      - name: income_level
+        description: "Monthly household income in dollars"
+        tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              min_value: 0
+              max_value: 10000
+      - name: voucher_value
+        description: "Monthly WIC voucher value in dollars"
+        tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              min_value: 0
+              max_value: 500
+      - name: program_status
+        description: "Current program participation status"
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['active', 'certified', 'inactive', 'pending']

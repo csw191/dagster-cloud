@@ -1,0 +1,6 @@
+# FILE: packages.yml
+# Location: /home/jparep/proj/dbt/ecids-test/ecids_test/packages.yml
+
+packages:
+  - package: dbt-labs/dbt_utils
+    version: 1.1.1

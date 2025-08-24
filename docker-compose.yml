@@ -1,0 +1,32 @@
+version: '3.8'
+ 
+services:
+  dagster:
+    build:
+      context: .
+      target: development
+    ports:
+      - "3001:3000"  # Using 3001 to avoid port conflicts
+    volumes:
+      - .:/app
+      - dagster-storage:/app/dagster_home/storage
+    environment:
+      - DAGSTER_HOME=/app/dagster_home
+    env_file:
+      - .env
+    
+  dagster-daemon:
+    build:
+      context: .
+      target: development
+    volumes:
+      - .:/app
+      - dagster-storage:/app/dagster_home/storage
+    environment:
+      - DAGSTER_HOME=/app/dagster_home
+    env_file:
+      - .env
+    command: ["uv", "run", "dagster-daemon", "run"]
+ 
+volumes:
+  dagster-storage:

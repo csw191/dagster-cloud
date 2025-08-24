@@ -1,0 +1,43 @@
+[project]
+name = "dagster-cloud"
+version = "0.1.0"
+description = "Dagster Cloud"
+authors = [
+    {name = "CSW191", email = "joshua.parep@mt.gov"}
+]
+
+license = {text = "MIT"}
+readme = "README.md"
+requires-python = ">=3.12,<3.15"
+ 
+dependencies = [
+    "dagster>=1.11.5,<2.0.0",
+    "dbt-snowflake>=1.10.0,<2.0.0",
+    "python-dotenv>=1.1.1,<2.0.0",
+    "dagster-dbt>=0.27.5,<0.28.0",
+    "pydantic>=2.11.7,<3.0.0",
+    "dagster-webserver>=1.11.5,<2.0.0",
+    "pydantic-settings>=2.10.1,<3.0.0",
+]
+ 
+[project.optional-dependencies]
+dev = [
+    "black>=25.1.0",
+]
+ 
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+ 
+# Explicitly configure hatchling to include the package
+[tool.hatch.build.targets.wheel]
+packages = ["dagster_cloud"]
+
+[tool.dagster]
+module_name = "dagster_cloud"
+
+ 
+[tool.uv]
+dev-dependencies = [
+    "black>=25.1.0",
+]

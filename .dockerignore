@@ -1,0 +1,16 @@
+.git
+.gitignore
+.pytest_cache
+.coverage
+.env
+.env.*
+.envrc
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.Python
+dagster_home/storage
+dagster_home/logs
+.vscode
+.idea
