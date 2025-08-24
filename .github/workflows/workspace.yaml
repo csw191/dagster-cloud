@@ -1,55 +1,55 @@
-name: Deploy to Dagster Cloud Serverless
+# name: Deploy to Dagster Cloud Serverless
  
-on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+# on:
+#   push:
+#     branches:
+#       - main
+#   pull_request:
+#     branches:
+#       - main
  
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
+# jobs:
+#   deploy:
+#     runs-on: ubuntu-latest
     
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+#     steps:
+#     - name: Checkout code
+#       uses: actions/checkout@v4
       
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.9'
+#     - name: Set up Python
+#       uses: actions/setup-python@v4
+#       with:
+#         python-version: '3.9'
         
-    - name: Install dependencies
-      run: |
-        pip install dagster dagster-cloud
+#     - name: Install dependencies
+#       run: |
+#         pip install dagster dagster-cloud
         
-    - name: Deploy to Dagster Cloud
-      env:
-        DAGSTER_CLOUD_API_TOKEN: ${{ secrets.DAGSTER_CLOUD_API_TOKEN }}
-        DAGSTER_CLOUD_ORGANIZATION: ${{ secrets.DAGSTER_CLOUD_ORGANIZATION }}
-      run: |
-        dagster-cloud workspace sync
+#     - name: Deploy to Dagster Cloud
+#       env:
+#         DAGSTER_CLOUD_API_TOKEN: ${{ secrets.DAGSTER_CLOUD_API_TOKEN }}
+#         DAGSTER_CLOUD_ORGANIZATION: ${{ secrets.DAGSTER_CLOUD_ORGANIZATION }}
+#       run: |
+#         dagster-cloud workspace sync
         
 # Alternative approach using Dagster's official action
 # Uncomment this section and comment out the job above if you prefer:
  
-# jobs:
-#   dagster-cloud-deploy:
-#     runs-on: ubuntu-latest
-#     
-#     steps:
-#     - name: Checkout
-#       uses: actions/checkout@v4
-#       
-#     - name: Deploy to Dagster Cloud serverless
-#       uses: dagster-io/dagster-cloud-action/actions/deploy@v0.1
-#       with:
-#         dagster_cloud_api_token: ${{ secrets.DAGSTER_CLOUD_API_TOKEN }}
-#         location: |
-#           - location_name: dagster-cloud
-#             image: ghcr.io/csw191/dagster-cloud:latest
-#             code_source:
-#               package_name: dagster_cloud
-#               working_directory: /app
+jobs:
+  dagster-cloud-deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      
+    - name: Deploy to Dagster Cloud serverless
+      uses: dagster-io/dagster-cloud-action/actions/deploy@v0.1
+      with:
+        dagster_cloud_api_token: ${{ secrets.DAGSTER_CLOUD_API_TOKEN }}
+        location: |
+          - location_name: dagster-cloud
+            image: ghcr.io/csw191/dagster-cloud:latest
+            code_source:
+              package_name: dagster_cloud
+              working_directory: /app
