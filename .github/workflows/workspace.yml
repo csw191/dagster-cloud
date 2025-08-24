@@ -41,11 +41,13 @@ jobs:
       env:
         DAGSTER_CLOUD_API_TOKEN: ${{ secrets.DAGSTER_CLOUD_API_TOKEN }}
       run: |
-        # Replace 'your-org-name' with your actual Dagster Cloud organization name
-        ORGANIZATION_NAME="mt-hhs"  # <-- REPLACE THIS WITH YOUR ACTUAL ORG NAME
-
+        # Replace with your actual organization and deployment names
+        ORGANIZATION_NAME="mt-hhs"
+        DEPLOYMENT_NAME="prod"  # Change this to your actual deployment name
+        
         echo "Using organization: $ORGANIZATION_NAME"
+        echo "Using deployment: $DEPLOYMENT_NAME"
         echo "API Token length: ${#DAGSTER_CLOUD_API_TOKEN}"
         
-        # Use explicit organization parameter
-        dagster-cloud workspace sync --organization "$ORGANIZATION_NAME"
+        # Use explicit organization and deployment parameters
+        dagster-cloud workspace sync --organization "$ORGANIZATION_NAME" --deployment "$DEPLOYMENT_NAME"
