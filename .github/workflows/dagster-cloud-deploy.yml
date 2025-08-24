@@ -1,0 +1,14 @@
+name: Deploy to Dagster Cloud
+on:
+  push:
+    branches: [main]
+ 
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - uses: dagster-io/dagster-cloud-action/actions/deploy@v0.1
+      with:
+        dagster_cloud_api_token: ${{ secrets.DAGSTER_CLOUD_API_TOKEN }}
+        location: dagster-cloud
