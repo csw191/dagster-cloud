@@ -26,16 +26,19 @@ jobs:
       run: |
         pip install dagster-cloud[docker]
         
-    - name: Create workspace.yaml with organization
+    - name: Update dagster_cloud.yaml configuration
       run: |
-        cat > workspace.yaml << EOF
+        # Update your existing dagster_cloud.yaml to fix the format
+        cat > dagster_cloud.yaml << EOF
         locations:
           - location_name: dagster-cloud
             image: ghcr.io/csw191/dagster-cloud:latest
             code_source:
               package_name: dagster_cloud
-              working_directory: /app
         EOF
+        
+        echo "Updated dagster_cloud.yaml:"
+        cat dagster_cloud.yaml
         
     - name: Deploy to Dagster Cloud
       env:
