@@ -2,3 +2,4 @@ locations:
   - location_name: dagster-cloud
     code_source:
       package_name: dagster_cloud
+    python_file: dagster_cloud/__init__.py
