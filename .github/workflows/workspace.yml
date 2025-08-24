@@ -17,13 +17,28 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4
       
-    - name: Deploy to Dagster Cloud serverless
-      uses: dagster-io/dagster-cloud-action/actions/deploy@v0.1
+    - name: Setup Python
+      uses: actions/setup-python@v4
       with:
-        dagster_cloud_api_token: ${{ secrets.DAGSTER_CLOUD_API_TOKEN }}
-        location: |
+        python-version: '3.9'
+        
+    - name: Install Dagster Cloud CLI
+      run: |
+        pip install dagster-cloud[docker]
+        
+    - name: Create workspace.yaml
+      run: |
+        cat > workspace.yaml << EOF
+        locations:
           - location_name: dagster-cloud
             image: ghcr.io/csw191/dagster-cloud:latest
             code_source:
               package_name: dagster_cloud
               working_directory: /app
+        EOF
+        
+    - name: Deploy to Dagster Cloud
+      env:
+        DAGSTER_CLOUD_API_TOKEN: ${{ secrets.DAGSTER_CLOUD_API_TOKEN }}
+      run: |
+        dagster-cloud workspace sync
