@@ -8,36 +8,10 @@ on:
     branches:
       - main
  
-# jobs:
-#   deploy:
-#     runs-on: ubuntu-latest
-    
-#     steps:
-#     - name: Checkout code
-#       uses: actions/checkout@v4
-      
-#     - name: Set up Python
-#       uses: actions/setup-python@v4
-#       with:
-#         python-version: '3.9'
-        
-#     - name: Install dependencies
-#       run: |
-#         pip install dagster dagster-cloud
-        
-#     - name: Deploy to Dagster Cloud
-#       env:
-#         DAGSTER_CLOUD_API_TOKEN: ${{ secrets.DAGSTER_CLOUD_API_TOKEN }}
-#         DAGSTER_CLOUD_ORGANIZATION: ${{ secrets.DAGSTER_CLOUD_ORGANIZATION }}
-#       run: |
-#         dagster-cloud workspace sync
-        
-# Alternative approach using Dagster's official action
-# Uncomment this section and comment out the job above if you prefer:
- 
 jobs:
   dagster-cloud-deploy:
     runs-on: ubuntu-latest
+    name: Deploy to Dagster Cloud
     
     steps:
     - name: Checkout
