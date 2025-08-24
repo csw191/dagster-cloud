@@ -1,6 +1,4 @@
 locations:
   - location_name: dagster-cloud
-    image: python:3.12-slim
     code_source:
       package_name: dagster_cloud
-    working_directory: /opt/dagster/app
