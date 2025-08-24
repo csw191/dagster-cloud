@@ -26,7 +26,9 @@ jobs:
       run: |
         pip install dagster-cloud[docker]
         
-    - name: Create workspace.yaml
+    - name: Create workspace.yaml with organization
+      env:
+        DAGSTER_CLOUD_ORGANIZATION: ${{ secrets.DAGSTER_CLOUD_ORGANIZATION }}
       run: |
         cat > workspace.yaml << EOF
         locations:
@@ -37,9 +39,20 @@ jobs:
               working_directory: /app
         EOF
         
+        # Create Dagster Cloud config with organization
+        mkdir -p ~/.dagster_cloud
+        cat > ~/.dagster_cloud/config.yaml << EOF
+        organization: $DAGSTER_CLOUD_ORGANIZATION
+        EOF
+        
     - name: Deploy to Dagster Cloud
       env:
         DAGSTER_CLOUD_API_TOKEN: ${{ secrets.DAGSTER_CLOUD_API_TOKEN }}
         DAGSTER_CLOUD_ORGANIZATION: ${{ secrets.DAGSTER_CLOUD_ORGANIZATION }}
       run: |
-        dagster-cloud workspace sync
+        # Debug: Check if environment variables are set
+        echo "Organization: $DAGSTER_CLOUD_ORGANIZATION"
+        echo "API Token length: ${#DAGSTER_CLOUD_API_TOKEN}"
+        
+        # Use explicit organization parameter
+        dagster-cloud workspace sync --organization "$DAGSTER_CLOUD_ORGANIZATION"
